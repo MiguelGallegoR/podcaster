@@ -3,8 +3,12 @@ import { getPodcasts } from "../services/getPodcasts"
 export const usePodcasts = (search) => {
     const [podcasts, setPodcasts] = useState()
     useEffect(()=>{
-       getPodcasts().then(newPodcasts => setPodcasts(newPodcasts))
-       localStorage.setItem(`podcasts`, JSON.stringify(podcasts));
+        async function fetchData() {
+            const newPodcasts = await getPodcasts();
+            setPodcasts(newPodcasts);
+            localStorage.setItem('podcasts', JSON.stringify(newPodcasts));
+        }
+        fetchData()
     },[])
 
     const filteredPodcasts = useMemo(()=>{
