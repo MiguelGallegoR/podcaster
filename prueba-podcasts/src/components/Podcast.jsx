@@ -2,7 +2,6 @@ import { Card } from 'antd';
 import { Link } from 'react-router-dom';
 
 export const Podcast = ({podcastInfo}) => {
-
     return (
         <Card hoverable>
             <Link to={`/podcast/${podcastInfo.id.attributes["im:id"]}`} >
