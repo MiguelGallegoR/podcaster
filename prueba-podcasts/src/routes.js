@@ -1,6 +1,6 @@
 import { Home } from "./pages/Home";
-import { Podcast } from "./components/Podcast";
 import { Detail } from "./pages/Detail";
+import { Episode } from "./pages/Episode";
 const pathRoutes = [
     {
       path: '/',
@@ -9,7 +9,9 @@ const pathRoutes = [
     ,{
       path: `/podcast/:id`,
       element: Detail,
-      
+    },{
+      path: `/podcast/:id/episode/:episodeId`,
+      element: Episode,
     }
     
   ];
