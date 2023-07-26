@@ -5,11 +5,23 @@ export const getPodcastDetail = async(id) => {
         const data = await json
         const contents = data.contents
         const results = JSON.parse(contents)
-        console.log(results.results[0])
         return results.results[0]
     
     }catch (error) {
         console.error('Error al realizar la solicitud:', error);
     }
     
+}
+export const getEpisodeList = async (url) => {
+    try{
+        const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`${url}`)}`)
+        const json = await res.json()
+        const data = await json.contents
+        return data
+    
+       
+    
+    }catch (error) {
+        console.error('Error al realizar la solicitud:', error);
+    }
 }
