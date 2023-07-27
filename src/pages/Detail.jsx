@@ -6,7 +6,7 @@ import { Link, useParams } from "react-router-dom"
 export const Detail = () => {
     const { id } = useParams();
     const {podcast, filteredPodcastStorage, episodeList, isLoading} = usePodcast(id)
-    console.log(episodeList[0].id)
+    //console.log(episodeList[0].id)
     const columns = [
         {
             title: 'Title',
@@ -37,11 +37,6 @@ export const Detail = () => {
                         <Table
                             dataSource={episodeList}
                             columns={columns}
-                            onRow={(record, rowIndex) => {
-                                return {
-                                  onClick: (event) => {<Link to={`/podcast/${id}/episode/${episodeList.id}`}></Link>}, 
-                                };
-                              }}
                         />
                     </div>
                 </main>
