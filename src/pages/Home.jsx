@@ -15,7 +15,6 @@ export const Home = () => {
     }
     return (
         <>
-            <Header />
             <main>
                 <Input placeholder='Filter podcasts...' className="filter-podcasts" onChange={handleChange}/>
                 <ListOfPodcasts podcasts={filteredPodcasts}/>
