@@ -39,3 +39,10 @@
   display: flex;
   gap: 2rem;
 }
+
+.episode-container{
+  display: flex;
+  gap: 2rem;
+}
+
+.audio-player{width: 100%;}
