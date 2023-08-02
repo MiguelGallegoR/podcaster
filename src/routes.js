@@ -7,10 +7,10 @@ const pathRoutes = [
       element: Home,
     }
     ,{
-      path: `/podcast/:id`,
+      path: `/podcast/:podcastId`,
       element: Detail,
     },{
-      path: `/podcast/:id/episode/:episodeId`,
+      path: `/podcast/:podcastId/episode/:episodeId`,
       element: Episode,
     }
     
