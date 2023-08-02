@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
-import { getPodcastDetail, getEpisodeList } from "../services/getPodcastDetail"
-
+import { getEpisodeList } from "../services/getEpisodes";
+import { readCachedData } from "../utils";
+import { getPodcastDetail } from "../services/getPodcastDetail";
 let parseString = require('xml2js').parseString;
 export const usePodcast = (id) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -32,56 +33,54 @@ export const usePodcast = (id) => {
         return `${day}/${month}/${year}`;
     }
 
-    // const getFormatDurationString = (duration) =>{
-    //     let durationString = '';
-    //     let totalSecs = Number(duration);
-    //     let secs = totalSecs % 60;
-    //     let min = Math.floor(totalSecs / 60);
-
-    //     if (min > 60)
-    //     {
-    //         let hours = Math.floor(min / 60);
-    //         durationString = hours + ":" + min + ":" + secs;
-    //         return durationString
-    //     }
-
-    //     durationString =  `${min}:${secs}`;
-    //     return durationString
-    // }
+  
+    const readCachedEpisodes = () => {
+        return readCachedData(podcastEpisodesTimeStampKey, podcastEpisodesKey);
+    }
 
     useEffect(()=>{
-        async function fetchData(){
-            try{
-                const newPodcast = await getPodcastDetail(id)
-                setPodcast(newPodcast)
-            
-                const response = await getEpisodeList(newPodcast.feedUrl)
-                setIsLoading(false)
-                parseString(response, function (err, result) {
-                    const episodeListR = result?.rss?.channel[0]?.item;
+        let cachedEpisodes = readCachedEpisodes();
 
-                    if (episodeListR){
-                        let episodeObjectList = [];
-                        let episodeIndex = 0;
-
-                        episodeListR.forEach(i => {
-                            episodeObjectList.push(createEpisodeObject(i, episodeIndex++));
-                        });
-                        setEpisodeList(episodeObjectList)
-                        localStorage.setItem(podcastEpisodesKey, JSON.stringify(episodeObjectList));
-                        localStorage.setItem(podcastEpisodesTimeStampKey, JSON.stringify((new Date()).getTime()));
-
-                    }
-
-                })
-                
-            }catch(error) {
-                console.error(error);
-                throw error;
-            }
+        if (cachedEpisodes === null){
            
+         
+                async function fetchData(){
+                    try{
+                        const newPodcast = await getPodcastDetail(id)
+                        setPodcast(newPodcast)
+                        const response = await getEpisodeList(newPodcast.feedUrl)
+                        setIsLoading(false)
+                        parseString(response, function (err, result) {
+                            const episodeListR = result?.rss?.channel[0]?.item;
+
+                            if (episodeListR){
+                                let episodeObjectList = [];
+                                let episodeIndex = 0;
+
+                                episodeListR.forEach(i => {
+                                    episodeObjectList.push(createEpisodeObject(i, episodeIndex++));
+                                });
+                                setEpisodeList(episodeObjectList)
+                                localStorage.setItem(podcastEpisodesKey, JSON.stringify(episodeObjectList));
+                                localStorage.setItem(podcastEpisodesTimeStampKey, JSON.stringify((new Date()).getTime()));
+
+                            }
+
+                        })
+                    
+                    }catch(error) {
+                        console.error(error);
+                        throw error;
+                    }
+                }
+                fetchData()
+
+            
+        } else {
+            setEpisodeList(cachedEpisodes);
+            setIsLoading(false)
+
         }
-        fetchData()
     },[id])
 
     const podcastsStorage = sessionStorage.getItem('cachedData')
